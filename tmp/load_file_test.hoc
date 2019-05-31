@@ -1,0 +1,6 @@
+print "testing a load_file with a string containing a folder"
+strdef file_to_load
+file_to_load="run_test/parameters.hoc"
+system("pwd")
+load_file(file_to_load)
+system("pwd")
