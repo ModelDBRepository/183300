@@ -102,8 +102,13 @@ FUNCTION outer_invl(mean (ms)) (ms) {
 	}
 }
 VERBATIM
+#ifndef NRN_VERSION_GTEQ_8_2_0
 double nrn_random_pick(void* r);
 void* nrn_random_arg(int argpos);
+#define RANDCAST
+#else
+#define RANDCAST (Rand*)
+#endif
 ENDVERBATIM
 
 FUNCTION erand() {
@@ -114,7 +119,7 @@ VERBATIM
 		: each instance. However, the corresponding hoc Random
 		: distribution MUST be set to Random.negexp(1)
 		*/
-		_lerand = nrn_random_pick(_p_donotuse);
+		_lerand = nrn_random_pick(RANDCAST _p_donotuse);
 	}else{
 		/* only can be used in main thread */
 		if (_nt != nrn_threads) {
@@ -134,11 +139,11 @@ ENDVERBATIM
 PROCEDURE noiseFromRandom() {
 VERBATIM
  {
-	void** pv = (void**)(&_p_donotuse);
+	IvocVect** pv = (IvocVect**)(&_p_donotuse);
 	if (ifarg(1)) {
-		*pv = nrn_random_arg(1);
+		*pv = (IvocVect*)nrn_random_arg(1);
 	}else{
-		*pv = (void*)0;
+		*pv = (IvocVect*)0;
 	}
  }
 ENDVERBATIM
